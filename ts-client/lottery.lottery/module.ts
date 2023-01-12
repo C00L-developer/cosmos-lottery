@@ -7,17 +7,11 @@ import { msgTypes } from './registry';
 import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
-import { MsgRevealBet } from "./types/lottery/lottery/tx";
 import { MsgAddBet } from "./types/lottery/lottery/tx";
+import { MsgRevealBet } from "./types/lottery/lottery/tx";
 
 
-export { MsgRevealBet, MsgAddBet };
-
-type sendMsgRevealBetParams = {
-  value: MsgRevealBet,
-  fee?: StdFee,
-  memo?: string
-};
+export { MsgAddBet, MsgRevealBet };
 
 type sendMsgAddBetParams = {
   value: MsgAddBet,
@@ -25,13 +19,19 @@ type sendMsgAddBetParams = {
   memo?: string
 };
 
-
-type msgRevealBetParams = {
+type sendMsgRevealBetParams = {
   value: MsgRevealBet,
+  fee?: StdFee,
+  memo?: string
 };
+
 
 type msgAddBetParams = {
   value: MsgAddBet,
+};
+
+type msgRevealBetParams = {
+  value: MsgRevealBet,
 };
 
 
@@ -52,20 +52,6 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 
   return {
 		
-		async sendMsgRevealBet({ value, fee, memo }: sendMsgRevealBetParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgRevealBet: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgRevealBet({ value: MsgRevealBet.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgRevealBet: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
 		async sendMsgAddBet({ value, fee, memo }: sendMsgAddBetParams): Promise<DeliverTxResponse> {
 			if (!signer) {
 					throw new Error('TxClient:sendMsgAddBet: Unable to sign Tx. Signer is not present.')
@@ -80,20 +66,34 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		
-		msgRevealBet({ value }: msgRevealBetParams): EncodeObject {
-			try {
-				return { typeUrl: "/lottery.lottery.MsgRevealBet", value: MsgRevealBet.fromPartial( value ) }  
+		async sendMsgRevealBet({ value, fee, memo }: sendMsgRevealBetParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgRevealBet: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgRevealBet({ value: MsgRevealBet.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
-				throw new Error('TxClient:MsgRevealBet: Could not create message: ' + e.message)
+				throw new Error('TxClient:sendMsgRevealBet: Could not broadcast Tx: '+ e.message)
 			}
 		},
+		
 		
 		msgAddBet({ value }: msgAddBetParams): EncodeObject {
 			try {
 				return { typeUrl: "/lottery.lottery.MsgAddBet", value: MsgAddBet.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgAddBet: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgRevealBet({ value }: msgRevealBetParams): EncodeObject {
+			try {
+				return { typeUrl: "/lottery.lottery.MsgRevealBet", value: MsgRevealBet.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgRevealBet: Could not create message: ' + e.message)
 			}
 		},
 		
