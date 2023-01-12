@@ -4,12 +4,13 @@ import (
 	"strconv"
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/stretchr/testify/require"
 	keepertest "lottery/testutil/keeper"
 	"lottery/testutil/nullify"
 	"lottery/x/lottery/keeper"
 	"lottery/x/lottery/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/stretchr/testify/require"
 )
 
 // Prevent strconv unused error
@@ -18,7 +19,7 @@ var _ = strconv.IntSize
 func createNLottery(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Lottery {
 	items := make([]types.Lottery, n)
 	for i := range items {
-		items[i].Index = strconv.Itoa(i)
+		items[i].Index = uint64(i)
 
 		keeper.SetLottery(ctx, items[i])
 	}
@@ -39,6 +40,7 @@ func TestLotteryGet(t *testing.T) {
 		)
 	}
 }
+
 func TestLotteryRemove(t *testing.T) {
 	keeper, ctx := keepertest.LotteryKeeper(t)
 	items := createNLottery(keeper, ctx, 10)

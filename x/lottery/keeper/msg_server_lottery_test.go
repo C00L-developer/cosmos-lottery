@@ -22,8 +22,9 @@ func TestLotteryMsgServerCreate(t *testing.T) {
 	wctx := sdk.WrapSDKContext(ctx)
 	creator := "A"
 	for i := 0; i < 5; i++ {
-		expected := &types.MsgCreateLottery{Creator: creator,
-			Index: strconv.Itoa(i),
+		expected := &types.MsgCreateLottery{
+			Creator: creator,
+			Index:   uint64(i),
 		}
 		_, err := srv.CreateLottery(wctx, expected)
 		require.NoError(t, err)
@@ -45,21 +46,24 @@ func TestLotteryMsgServerUpdate(t *testing.T) {
 	}{
 		{
 			desc: "Completed",
-			request: &types.MsgUpdateLottery{Creator: creator,
-				Index: strconv.Itoa(0),
+			request: &types.MsgUpdateLottery{
+				Creator: creator,
+				Index:   uint64(0),
 			},
 		},
 		{
 			desc: "Unauthorized",
-			request: &types.MsgUpdateLottery{Creator: "B",
-				Index: strconv.Itoa(0),
+			request: &types.MsgUpdateLottery{
+				Creator: "B",
+				Index:   uint64(0),
 			},
 			err: sdkerrors.ErrUnauthorized,
 		},
 		{
 			desc: "KeyNotFound",
-			request: &types.MsgUpdateLottery{Creator: creator,
-				Index: strconv.Itoa(100000),
+			request: &types.MsgUpdateLottery{
+				Creator: creator,
+				Index:   uint64(100000),
 			},
 			err: sdkerrors.ErrKeyNotFound,
 		},
@@ -68,8 +72,9 @@ func TestLotteryMsgServerUpdate(t *testing.T) {
 			k, ctx := keepertest.LotteryKeeper(t)
 			srv := keeper.NewMsgServerImpl(*k)
 			wctx := sdk.WrapSDKContext(ctx)
-			expected := &types.MsgCreateLottery{Creator: creator,
-				Index: strconv.Itoa(0),
+			expected := &types.MsgCreateLottery{
+				Creator: creator,
+				Index:   uint64(0),
 			}
 			_, err := srv.CreateLottery(wctx, expected)
 			require.NoError(t, err)
@@ -99,21 +104,24 @@ func TestLotteryMsgServerDelete(t *testing.T) {
 	}{
 		{
 			desc: "Completed",
-			request: &types.MsgDeleteLottery{Creator: creator,
-				Index: strconv.Itoa(0),
+			request: &types.MsgDeleteLottery{
+				Creator: creator,
+				Index:   uint64(0),
 			},
 		},
 		{
 			desc: "Unauthorized",
-			request: &types.MsgDeleteLottery{Creator: "B",
-				Index: strconv.Itoa(0),
+			request: &types.MsgDeleteLottery{
+				Creator: "B",
+				Index:   uint64(0),
 			},
 			err: sdkerrors.ErrUnauthorized,
 		},
 		{
 			desc: "KeyNotFound",
-			request: &types.MsgDeleteLottery{Creator: creator,
-				Index: strconv.Itoa(100000),
+			request: &types.MsgDeleteLottery{
+				Creator: creator,
+				Index:   uint64(100000),
 			},
 			err: sdkerrors.ErrKeyNotFound,
 		},
@@ -123,8 +131,9 @@ func TestLotteryMsgServerDelete(t *testing.T) {
 			srv := keeper.NewMsgServerImpl(*k)
 			wctx := sdk.WrapSDKContext(ctx)
 
-			_, err := srv.CreateLottery(wctx, &types.MsgCreateLottery{Creator: creator,
-				Index: strconv.Itoa(0),
+			_, err := srv.CreateLottery(wctx, &types.MsgCreateLottery{
+				Creator: creator,
+				Index:   uint64(0),
 			})
 			require.NoError(t, err)
 			_, err = srv.DeleteLottery(wctx, tc.request)

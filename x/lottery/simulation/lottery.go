@@ -4,13 +4,14 @@ import (
 	"math/rand"
 	"strconv"
 
+	"lottery/x/lottery/keeper"
+	"lottery/x/lottery/types"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"lottery/x/lottery/keeper"
-	"lottery/x/lottery/types"
 )
 
 // Prevent strconv unused error
@@ -28,7 +29,7 @@ func SimulateMsgCreateLottery(
 		i := r.Int()
 		msg := &types.MsgCreateLottery{
 			Creator: simAccount.Address.String(),
-			Index:   strconv.Itoa(i),
+			Index:   uint64(i),
 		}
 
 		_, found := k.GetLottery(ctx, msg.Index)

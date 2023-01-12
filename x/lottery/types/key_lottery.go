@@ -1,6 +1,10 @@
 package types
 
-import "encoding/binary"
+import (
+	"encoding/binary"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+)
 
 var _ binary.ByteOrder
 
@@ -11,11 +15,11 @@ const (
 
 // LotteryKey returns the store key to retrieve a Lottery from the index fields
 func LotteryKey(
-	index string,
+	index uint64,
 ) []byte {
 	var key []byte
 
-	indexBytes := []byte(index)
+	indexBytes := sdk.Uint64ToBigEndian(index)
 	key = append(key, indexBytes...)
 	key = append(key, []byte("/")...)
 

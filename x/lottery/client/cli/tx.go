@@ -11,9 +11,7 @@ import (
 	"lottery/x/lottery/types"
 )
 
-var (
-	DefaultRelativePacketTimeoutTimestamp = uint64((time.Duration(10) * time.Minute).Nanoseconds())
-)
+var DefaultRelativePacketTimeoutTimestamp = uint64((time.Duration(10) * time.Minute).Nanoseconds())
 
 const (
 	flagPacketTimeoutTimestamp = "packet-timeout-timestamp"
@@ -32,9 +30,6 @@ func GetTxCmd() *cobra.Command {
 
 	cmd.AddCommand(CmdAddBet())
 	cmd.AddCommand(CmdRevealBet())
-	cmd.AddCommand(CmdCreateLottery())
-	cmd.AddCommand(CmdUpdateLottery())
-	cmd.AddCommand(CmdDeleteLottery())
 	// this line is used by starport scaffolding # 1
 
 	return cmd

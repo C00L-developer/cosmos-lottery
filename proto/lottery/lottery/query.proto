@@ -68,7 +68,7 @@ message QueryAllBetResponse {
 }
 
 message QueryGetLotteryRequest {
-	  string index = 1;
+	  uint64 index = 1;
 
 }
 

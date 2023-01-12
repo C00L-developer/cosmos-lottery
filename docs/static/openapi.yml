@@ -44877,6 +44877,7 @@ paths:
                   properties:
                     index:
                       type: string
+                      format: uint64
                     winner:
                       type: string
                     creator:
@@ -45001,6 +45002,7 @@ paths:
                 properties:
                   index:
                     type: string
+                    format: uint64
                   winner:
                     type: string
                   creator:
@@ -45028,6 +45030,7 @@ paths:
           in: path
           required: true
           type: string
+          format: uint64
       tags:
         - Query
   /lottery/lottery/params:
@@ -74637,6 +74640,7 @@ definitions:
     properties:
       index:
         type: string
+        format: uint64
       winner:
         type: string
       creator:
@@ -74708,6 +74712,7 @@ definitions:
           properties:
             index:
               type: string
+              format: uint64
             winner:
               type: string
             creator:
@@ -74762,6 +74767,7 @@ definitions:
         properties:
           index:
             type: string
+            format: uint64
           winner:
             type: string
           creator:

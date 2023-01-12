@@ -45,7 +45,7 @@ func TestLotteryQuerySingle(t *testing.T) {
 		{
 			desc: "KeyNotFound",
 			request: &types.QueryGetLotteryRequest{
-				Index: strconv.Itoa(100000),
+				Index: uint64(100000),
 			},
 			err: status.Error(codes.NotFound, "not found"),
 		},

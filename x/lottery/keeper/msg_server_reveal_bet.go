@@ -3,8 +3,9 @@ package keeper
 import (
 	"context"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"lottery/x/lottery/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 func (k msgServer) RevealBet(goCtx context.Context, msg *types.MsgRevealBet) (*types.MsgRevealBetResponse, error) {

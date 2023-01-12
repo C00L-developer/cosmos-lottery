@@ -8,7 +8,7 @@ option go_package = "lottery/x/lottery/types";
 
 // Msg defines the Msg service.
 service Msg {
-      rpc AddBet(MsgAddBet) returns (MsgAddBetResponse);
+  rpc AddBet(MsgAddBet) returns (MsgAddBetResponse);
   rpc RevealBet(MsgRevealBet) returns (MsgRevealBetResponse);
   rpc CreateLottery(MsgCreateLottery) returns (MsgCreateLotteryResponse);
   rpc UpdateLottery(MsgUpdateLottery) returns (MsgUpdateLotteryResponse);
@@ -35,7 +35,7 @@ message MsgRevealBetResponse {
 
 message MsgCreateLottery {
   string creator = 1;
-  string index = 2;
+  uint64 index = 2;
 
   string winner = 3;
 }
@@ -43,7 +43,7 @@ message MsgCreateLotteryResponse {}
 
 message MsgUpdateLottery {
   string creator = 1;
-  string index = 2;
+  uint64 index = 2;
 
   string winner = 3;
 }
@@ -51,7 +51,7 @@ message MsgUpdateLotteryResponse {}
 
 message MsgDeleteLottery {
   string creator = 1;
-  string index = 2;
+  uint64 index = 2;
 }
 message MsgDeleteLotteryResponse {}
 

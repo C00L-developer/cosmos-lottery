@@ -15,9 +15,8 @@ var _ sdk.Msg = &MsgCreateLottery{}
 
 func NewMsgCreateLottery(
 	creator string,
-	index string,
+	index uint64,
 	winner string,
-
 ) *MsgCreateLottery {
 	return &MsgCreateLottery{
 		Creator: creator,
@@ -59,9 +58,8 @@ var _ sdk.Msg = &MsgUpdateLottery{}
 
 func NewMsgUpdateLottery(
 	creator string,
-	index string,
+	index uint64,
 	winner string,
-
 ) *MsgUpdateLottery {
 	return &MsgUpdateLottery{
 		Creator: creator,
@@ -103,14 +101,14 @@ var _ sdk.Msg = &MsgDeleteLottery{}
 
 func NewMsgDeleteLottery(
 	creator string,
-	index string,
-
+	index uint64,
 ) *MsgDeleteLottery {
 	return &MsgDeleteLottery{
 		Creator: creator,
 		Index:   index,
 	}
 }
+
 func (msg *MsgDeleteLottery) Route() string {
 	return RouterKey
 }

@@ -3,15 +3,16 @@ package lottery
 import (
 	"math/rand"
 
+	"lottery/testutil/sample"
+	lotterysimulation "lottery/x/lottery/simulation"
+	"lottery/x/lottery/types"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"lottery/testutil/sample"
-	lotterysimulation "lottery/x/lottery/simulation"
-	"lottery/x/lottery/types"
 )
 
 // avoid unused import issue
@@ -58,11 +59,11 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 		LotteryList: []types.Lottery{
 			{
 				Creator: sample.AccAddress(),
-				Index:   "0",
+				Index:   0,
 			},
 			{
 				Creator: sample.AccAddress(),
-				Index:   "1",
+				Index:   1,
 			},
 		},
 		// this line is used by starport scaffolding # simapp/module/genesisState
@@ -77,7 +78,6 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 
 // RandomizedParams creates randomized  param changes for the simulator
 func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
-
 	return []simtypes.ParamChange{}
 }
 

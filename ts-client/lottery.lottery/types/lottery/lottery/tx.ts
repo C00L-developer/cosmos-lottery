@@ -1,4 +1,5 @@
 /* eslint-disable */
+import Long from "long";
 import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "lottery.lottery";
@@ -22,7 +23,7 @@ export interface MsgRevealBetResponse {
 
 export interface MsgCreateLottery {
   creator: string;
-  index: string;
+  index: number;
   winner: string;
 }
 
@@ -31,7 +32,7 @@ export interface MsgCreateLotteryResponse {
 
 export interface MsgUpdateLottery {
   creator: string;
-  index: string;
+  index: number;
   winner: string;
 }
 
@@ -40,7 +41,7 @@ export interface MsgUpdateLotteryResponse {
 
 export interface MsgDeleteLottery {
   creator: string;
-  index: string;
+  index: number;
 }
 
 export interface MsgDeleteLotteryResponse {
@@ -250,7 +251,7 @@ export const MsgRevealBetResponse = {
 };
 
 function createBaseMsgCreateLottery(): MsgCreateLottery {
-  return { creator: "", index: "", winner: "" };
+  return { creator: "", index: 0, winner: "" };
 }
 
 export const MsgCreateLottery = {
@@ -258,8 +259,8 @@ export const MsgCreateLottery = {
     if (message.creator !== "") {
       writer.uint32(10).string(message.creator);
     }
-    if (message.index !== "") {
-      writer.uint32(18).string(message.index);
+    if (message.index !== 0) {
+      writer.uint32(16).uint64(message.index);
     }
     if (message.winner !== "") {
       writer.uint32(26).string(message.winner);
@@ -278,7 +279,7 @@ export const MsgCreateLottery = {
           message.creator = reader.string();
           break;
         case 2:
-          message.index = reader.string();
+          message.index = longToNumber(reader.uint64() as Long);
           break;
         case 3:
           message.winner = reader.string();
@@ -294,7 +295,7 @@ export const MsgCreateLottery = {
   fromJSON(object: any): MsgCreateLottery {
     return {
       creator: isSet(object.creator) ? String(object.creator) : "",
-      index: isSet(object.index) ? String(object.index) : "",
+      index: isSet(object.index) ? Number(object.index) : 0,
       winner: isSet(object.winner) ? String(object.winner) : "",
     };
   },
@@ -302,7 +303,7 @@ export const MsgCreateLottery = {
   toJSON(message: MsgCreateLottery): unknown {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
-    message.index !== undefined && (obj.index = message.index);
+    message.index !== undefined && (obj.index = Math.round(message.index));
     message.winner !== undefined && (obj.winner = message.winner);
     return obj;
   },
@@ -310,7 +311,7 @@ export const MsgCreateLottery = {
   fromPartial<I extends Exact<DeepPartial<MsgCreateLottery>, I>>(object: I): MsgCreateLottery {
     const message = createBaseMsgCreateLottery();
     message.creator = object.creator ?? "";
-    message.index = object.index ?? "";
+    message.index = object.index ?? 0;
     message.winner = object.winner ?? "";
     return message;
   },
@@ -356,7 +357,7 @@ export const MsgCreateLotteryResponse = {
 };
 
 function createBaseMsgUpdateLottery(): MsgUpdateLottery {
-  return { creator: "", index: "", winner: "" };
+  return { creator: "", index: 0, winner: "" };
 }
 
 export const MsgUpdateLottery = {
@@ -364,8 +365,8 @@ export const MsgUpdateLottery = {
     if (message.creator !== "") {
       writer.uint32(10).string(message.creator);
     }
-    if (message.index !== "") {
-      writer.uint32(18).string(message.index);
+    if (message.index !== 0) {
+      writer.uint32(16).uint64(message.index);
     }
     if (message.winner !== "") {
       writer.uint32(26).string(message.winner);
@@ -384,7 +385,7 @@ export const MsgUpdateLottery = {
           message.creator = reader.string();
           break;
         case 2:
-          message.index = reader.string();
+          message.index = longToNumber(reader.uint64() as Long);
           break;
         case 3:
           message.winner = reader.string();
@@ -400,7 +401,7 @@ export const MsgUpdateLottery = {
   fromJSON(object: any): MsgUpdateLottery {
     return {
       creator: isSet(object.creator) ? String(object.creator) : "",
-      index: isSet(object.index) ? String(object.index) : "",
+      index: isSet(object.index) ? Number(object.index) : 0,
       winner: isSet(object.winner) ? String(object.winner) : "",
     };
   },
@@ -408,7 +409,7 @@ export const MsgUpdateLottery = {
   toJSON(message: MsgUpdateLottery): unknown {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
-    message.index !== undefined && (obj.index = message.index);
+    message.index !== undefined && (obj.index = Math.round(message.index));
     message.winner !== undefined && (obj.winner = message.winner);
     return obj;
   },
@@ -416,7 +417,7 @@ export const MsgUpdateLottery = {
   fromPartial<I extends Exact<DeepPartial<MsgUpdateLottery>, I>>(object: I): MsgUpdateLottery {
     const message = createBaseMsgUpdateLottery();
     message.creator = object.creator ?? "";
-    message.index = object.index ?? "";
+    message.index = object.index ?? 0;
     message.winner = object.winner ?? "";
     return message;
   },
@@ -462,7 +463,7 @@ export const MsgUpdateLotteryResponse = {
 };
 
 function createBaseMsgDeleteLottery(): MsgDeleteLottery {
-  return { creator: "", index: "" };
+  return { creator: "", index: 0 };
 }
 
 export const MsgDeleteLottery = {
@@ -470,8 +471,8 @@ export const MsgDeleteLottery = {
     if (message.creator !== "") {
       writer.uint32(10).string(message.creator);
     }
-    if (message.index !== "") {
-      writer.uint32(18).string(message.index);
+    if (message.index !== 0) {
+      writer.uint32(16).uint64(message.index);
     }
     return writer;
   },
@@ -487,7 +488,7 @@ export const MsgDeleteLottery = {
           message.creator = reader.string();
           break;
         case 2:
-          message.index = reader.string();
+          message.index = longToNumber(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -500,21 +501,21 @@ export const MsgDeleteLottery = {
   fromJSON(object: any): MsgDeleteLottery {
     return {
       creator: isSet(object.creator) ? String(object.creator) : "",
-      index: isSet(object.index) ? String(object.index) : "",
+      index: isSet(object.index) ? Number(object.index) : 0,
     };
   },
 
   toJSON(message: MsgDeleteLottery): unknown {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
-    message.index !== undefined && (obj.index = message.index);
+    message.index !== undefined && (obj.index = Math.round(message.index));
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<MsgDeleteLottery>, I>>(object: I): MsgDeleteLottery {
     const message = createBaseMsgDeleteLottery();
     message.creator = object.creator ?? "";
-    message.index = object.index ?? "";
+    message.index = object.index ?? 0;
     return message;
   },
 };
@@ -613,6 +614,25 @@ interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
 }
 
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
+
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
@@ -623,6 +643,18 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+function longToNumber(long: Long): number {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
+}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

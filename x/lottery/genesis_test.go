@@ -3,11 +3,12 @@ package lottery_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
 	keepertest "lottery/testutil/keeper"
 	"lottery/testutil/nullify"
 	"lottery/x/lottery"
 	"lottery/x/lottery/types"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestGenesis(t *testing.T) {
@@ -24,10 +25,10 @@ func TestGenesis(t *testing.T) {
 		},
 		LotteryList: []types.Lottery{
 			{
-				Index: "0",
+				Index: 0,
 			},
 			{
-				Index: "1",
+				Index: 1,
 			},
 		},
 		// this line is used by starport scaffolding # genesis/test/state

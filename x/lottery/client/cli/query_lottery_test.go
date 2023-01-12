@@ -29,7 +29,7 @@ func networkWithLotteryObjects(t *testing.T, n int) (*network.Network, []types.L
 
 	for i := 0; i < n; i++ {
 		lottery := types.Lottery{
-			Index: strconv.Itoa(i),
+			Index: uint64(i),
 		}
 		nullify.Fill(&lottery)
 		state.LotteryList = append(state.LotteryList, lottery)
@@ -49,7 +49,7 @@ func TestShowLottery(t *testing.T) {
 	}
 	for _, tc := range []struct {
 		desc    string
-		idIndex string
+		idIndex uint64
 
 		args []string
 		err  error
@@ -64,7 +64,7 @@ func TestShowLottery(t *testing.T) {
 		},
 		{
 			desc:    "not found",
-			idIndex: strconv.Itoa(100000),
+			idIndex: uint64(100000),
 
 			args: common,
 			err:  status.Error(codes.NotFound, "not found"),
@@ -72,7 +72,7 @@ func TestShowLottery(t *testing.T) {
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			args := []string{
-				tc.idIndex,
+				strconv.FormatUint(tc.idIndex, 10),
 			}
 			args = append(args, tc.args...)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowLottery(), args)

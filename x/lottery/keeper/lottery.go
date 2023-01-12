@@ -1,9 +1,10 @@
 package keeper
 
 import (
+	"lottery/x/lottery/types"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"lottery/x/lottery/types"
 )
 
 // SetLottery set a specific lottery in the store from its index
@@ -18,8 +19,7 @@ func (k Keeper) SetLottery(ctx sdk.Context, lottery types.Lottery) {
 // GetLottery returns a lottery from its index
 func (k Keeper) GetLottery(
 	ctx sdk.Context,
-	index string,
-
+	index uint64,
 ) (val types.Lottery, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LotteryKeyPrefix))
 
@@ -37,8 +37,7 @@ func (k Keeper) GetLottery(
 // RemoveLottery removes a lottery from the store
 func (k Keeper) RemoveLottery(
 	ctx sdk.Context,
-	index string,
-
+	index uint64,
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LotteryKeyPrefix))
 	store.Delete(types.LotteryKey(
@@ -60,4 +59,19 @@ func (k Keeper) GetAllLottery(ctx sdk.Context) (list []types.Lottery) {
 	}
 
 	return
+}
+
+// GetOpenLottery returns the current open lottery
+// if not exist, returns the created one
+func (k Keeper) GetOpenLottery(ctx sdk.Context) types.Lottery {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LotteryKeyPrefix))
+	iterator := sdk.KVStoreReversePrefixIterator(store, []byte{})
+	var val types.Lottery
+	if iterator.Valid() {
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+		if val.Winner == "" {
+			return val
+		}
+	}
+	return types.Lottery{}
 }

@@ -2,11 +2,14 @@ package cli
 
 import (
 	"context"
+	"fmt"
+	"strconv"
+
+	"lottery/x/lottery/types"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
-	"lottery/x/lottery/types"
 )
 
 func CmdListLottery() *cobra.Command {
@@ -52,7 +55,10 @@ func CmdShowLottery() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argIndex := args[0]
+			argIndex, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return fmt.Errorf("lottery index %s not a valid uint, please input a valid lottery index", args[0])
+			}
 
 			params := &types.QueryGetLotteryRequest{
 				Index: argIndex,

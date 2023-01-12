@@ -3,8 +3,9 @@ package types_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
 	"lottery/x/lottery/types"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestGenesisState_Validate(t *testing.T) {
@@ -21,7 +22,6 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
-
 				BetList: []types.Bet{
 					{
 						Index: "0",
@@ -32,10 +32,10 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 				LotteryList: []types.Lottery{
 					{
-						Index: "0",
+						Index: 0,
 					},
 					{
-						Index: "1",
+						Index: 1,
 					},
 				},
 				// this line is used by starport scaffolding # types/genesis/validField
@@ -61,10 +61,10 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{
 				LotteryList: []types.Lottery{
 					{
-						Index: "0",
+						Index: 0,
 					},
 					{
-						Index: "0",
+						Index: 0,
 					},
 				},
 			},

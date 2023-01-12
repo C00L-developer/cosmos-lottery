@@ -18,6 +18,7 @@ export interface LotteryBet {
 }
 
 export interface LotteryLottery {
+  /** @format uint64 */
   index?: string;
   winner?: string;
   creator?: string;
