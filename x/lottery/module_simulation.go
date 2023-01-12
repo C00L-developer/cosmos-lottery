@@ -32,6 +32,18 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgRevealBet int = 100
 
+	opWeightMsgCreateLottery = "op_weight_msg_lottery"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgCreateLottery int = 100
+
+	opWeightMsgUpdateLottery = "op_weight_msg_lottery"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgUpdateLottery int = 100
+
+	opWeightMsgDeleteLottery = "op_weight_msg_lottery"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgDeleteLottery int = 100
+
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -43,6 +55,16 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	}
 	lotteryGenesis := types.GenesisState{
 		Params: types.DefaultParams(),
+		LotteryList: []types.Lottery{
+			{
+				Creator: sample.AccAddress(),
+				Index:   "0",
+			},
+			{
+				Creator: sample.AccAddress(),
+				Index:   "1",
+			},
+		},
 		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&lotteryGenesis)
@@ -86,6 +108,39 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgRevealBet,
 		lotterysimulation.SimulateMsgRevealBet(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgCreateLottery int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCreateLottery, &weightMsgCreateLottery, nil,
+		func(_ *rand.Rand) {
+			weightMsgCreateLottery = defaultWeightMsgCreateLottery
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgCreateLottery,
+		lotterysimulation.SimulateMsgCreateLottery(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgUpdateLottery int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgUpdateLottery, &weightMsgUpdateLottery, nil,
+		func(_ *rand.Rand) {
+			weightMsgUpdateLottery = defaultWeightMsgUpdateLottery
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgUpdateLottery,
+		lotterysimulation.SimulateMsgUpdateLottery(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgDeleteLottery int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDeleteLottery, &weightMsgDeleteLottery, nil,
+		func(_ *rand.Rand) {
+			weightMsgDeleteLottery = defaultWeightMsgDeleteLottery
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgDeleteLottery,
+		lotterysimulation.SimulateMsgDeleteLottery(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

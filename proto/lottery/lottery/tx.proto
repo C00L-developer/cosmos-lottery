@@ -1,6 +1,7 @@
 syntax = "proto3";
 package lottery.lottery;
 
+import "lottery/lottery/lottery.proto";
 // this line is used by starport scaffolding # proto/tx/import
 
 option go_package = "lottery/x/lottery/types";
@@ -9,6 +10,9 @@ option go_package = "lottery/x/lottery/types";
 service Msg {
       rpc AddBet(MsgAddBet) returns (MsgAddBetResponse);
   rpc RevealBet(MsgRevealBet) returns (MsgRevealBetResponse);
+  rpc CreateLottery(MsgCreateLottery) returns (MsgCreateLotteryResponse);
+  rpc UpdateLottery(MsgUpdateLottery) returns (MsgUpdateLotteryResponse);
+  rpc DeleteLottery(MsgDeleteLottery) returns (MsgDeleteLotteryResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -28,5 +32,27 @@ message MsgRevealBet {
 
 message MsgRevealBetResponse {
 }
+
+message MsgCreateLottery {
+  string creator = 1;
+  string index = 2;
+
+  string winner = 3;
+}
+message MsgCreateLotteryResponse {}
+
+message MsgUpdateLottery {
+  string creator = 1;
+  string index = 2;
+
+  string winner = 3;
+}
+message MsgUpdateLotteryResponse {}
+
+message MsgDeleteLottery {
+  string creator = 1;
+  string index = 2;
+}
+message MsgDeleteLotteryResponse {}
 
 // this line is used by starport scaffolding # proto/tx/message

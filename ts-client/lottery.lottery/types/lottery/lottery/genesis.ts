@@ -1,21 +1,21 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
 import { Bet } from "./bet";
+import { Lottery } from "./lottery";
 import { Params } from "./params";
 
 export const protobufPackage = "lottery.lottery";
 
 /** GenesisState defines the lottery module's genesis state. */
 export interface GenesisState {
-  params:
-    | Params
-    | undefined;
-  /** this line is used by starport scaffolding # genesis/proto/state */
+  params: Params | undefined;
   betList: Bet[];
+  /** this line is used by starport scaffolding # genesis/proto/state */
+  lotteryList: Lottery[];
 }
 
 function createBaseGenesisState(): GenesisState {
-  return { params: undefined, betList: [] };
+  return { params: undefined, betList: [], lotteryList: [] };
 }
 
 export const GenesisState = {
@@ -25,6 +25,9 @@ export const GenesisState = {
     }
     for (const v of message.betList) {
       Bet.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    for (const v of message.lotteryList) {
+      Lottery.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -42,6 +45,9 @@ export const GenesisState = {
         case 2:
           message.betList.push(Bet.decode(reader, reader.uint32()));
           break;
+        case 3:
+          message.lotteryList.push(Lottery.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -54,6 +60,7 @@ export const GenesisState = {
     return {
       params: isSet(object.params) ? Params.fromJSON(object.params) : undefined,
       betList: Array.isArray(object?.betList) ? object.betList.map((e: any) => Bet.fromJSON(e)) : [],
+      lotteryList: Array.isArray(object?.lotteryList) ? object.lotteryList.map((e: any) => Lottery.fromJSON(e)) : [],
     };
   },
 
@@ -65,6 +72,11 @@ export const GenesisState = {
     } else {
       obj.betList = [];
     }
+    if (message.lotteryList) {
+      obj.lotteryList = message.lotteryList.map((e) => e ? Lottery.toJSON(e) : undefined);
+    } else {
+      obj.lotteryList = [];
+    }
     return obj;
   },
 
@@ -74,6 +86,7 @@ export const GenesisState = {
       ? Params.fromPartial(object.params)
       : undefined;
     message.betList = object.betList?.map((e) => Bet.fromPartial(e)) || [];
+    message.lotteryList = object.lotteryList?.map((e) => Lottery.fromPartial(e)) || [];
     return message;
   },
 };

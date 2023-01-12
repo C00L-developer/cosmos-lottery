@@ -6,6 +6,7 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "lottery/lottery/params.proto";
 import "lottery/lottery/bet.proto";
+import "lottery/lottery/lottery.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "lottery/x/lottery/types";
@@ -24,6 +25,16 @@ service Query {
 	// Queries a list of Bet items.
 	rpc BetAll(QueryAllBetRequest) returns (QueryAllBetResponse) {
 		option (google.api.http).get = "/lottery/lottery/bet";
+	}
+
+// Queries a Lottery by index.
+	rpc Lottery(QueryGetLotteryRequest) returns (QueryGetLotteryResponse) {
+		option (google.api.http).get = "/lottery/lottery/lottery/{index}";
+	}
+
+	// Queries a list of Lottery items.
+	rpc LotteryAll(QueryAllLotteryRequest) returns (QueryAllLotteryResponse) {
+		option (google.api.http).get = "/lottery/lottery/lottery";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -53,6 +64,24 @@ message QueryAllBetRequest {
 
 message QueryAllBetResponse {
 	repeated Bet bet = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetLotteryRequest {
+	  string index = 1;
+
+}
+
+message QueryGetLotteryResponse {
+	Lottery lottery = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllLotteryRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllLotteryResponse {
+	repeated Lottery lottery = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

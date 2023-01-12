@@ -10,7 +10,8 @@ const DefaultIndex uint64 = 1
 // DefaultGenesis returns the default genesis state
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
-		BetList: []Bet{},
+		BetList:     []Bet{},
+		LotteryList: []Lottery{},
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 	}
@@ -28,6 +29,16 @@ func (gs GenesisState) Validate() error {
 			return fmt.Errorf("duplicated index for bet")
 		}
 		betIndexMap[index] = struct{}{}
+	}
+	// Check for duplicated index in lottery
+	lotteryIndexMap := make(map[string]struct{})
+
+	for _, elem := range gs.LotteryList {
+		index := string(LotteryKey(elem.Index))
+		if _, ok := lotteryIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for lottery")
+		}
+		lotteryIndexMap[index] = struct{}{}
 	}
 	// this line is used by starport scaffolding # genesis/types/validate
 
