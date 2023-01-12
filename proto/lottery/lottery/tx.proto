@@ -7,7 +7,26 @@ option go_package = "lottery/x/lottery/types";
 
 // Msg defines the Msg service.
 service Msg {
-    // this line is used by starport scaffolding # proto/tx/rpc
+      rpc AddBet(MsgAddBet) returns (MsgAddBetResponse);
+  rpc RevealBet(MsgRevealBet) returns (MsgRevealBetResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgAddBet {
+  string creator = 1;
+  string amount = 2;
+  string suffixHash = 3;
+}
+
+message MsgAddBetResponse {
+}
+
+message MsgRevealBet {
+  string creator = 1;
+  string suffix = 2;
+}
+
+message MsgRevealBetResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

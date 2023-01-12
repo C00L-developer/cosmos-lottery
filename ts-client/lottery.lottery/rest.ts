@@ -9,6 +9,10 @@
  * ---------------------------------------------------------------
  */
 
+export type LotteryMsgAddBetResponse = object;
+
+export type LotteryMsgRevealBetResponse = object;
+
 /**
  * Params defines the parameters for the module.
  */
