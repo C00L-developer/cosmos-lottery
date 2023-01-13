@@ -45046,6 +45046,12 @@ paths:
               params:
                 description: params holds all the parameters of this module.
                 type: object
+                properties:
+                  BetThresCount:
+                    type: integer
+                    format: int64
+                  LotteryFee:
+                    type: string
             description: >-
               QueryParamsResponse is response type for the Query/Params RPC
               method.
@@ -74657,6 +74663,12 @@ definitions:
     type: object
   lottery.lottery.Params:
     type: object
+    properties:
+      BetThresCount:
+        type: integer
+        format: int64
+      LotteryFee:
+        type: string
     description: Params defines the parameters for the module.
   lottery.lottery.QueryAllBetResponse:
     type: object
@@ -74778,4 +74790,10 @@ definitions:
       params:
         description: params holds all the parameters of this module.
         type: object
+        properties:
+          BetThresCount:
+            type: integer
+            format: int64
+          LotteryFee:
+            type: string
     description: QueryParamsResponse is response type for the Query/Params RPC method.

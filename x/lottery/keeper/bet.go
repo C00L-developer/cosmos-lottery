@@ -1,9 +1,10 @@
 package keeper
 
 import (
+	"lottery/x/lottery/types"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"lottery/x/lottery/types"
 )
 
 // SetBet set a specific bet in the store from its index
@@ -19,7 +20,6 @@ func (k Keeper) SetBet(ctx sdk.Context, bet types.Bet) {
 func (k Keeper) GetBet(
 	ctx sdk.Context,
 	index string,
-
 ) (val types.Bet, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.BetKeyPrefix))
 
@@ -38,12 +38,27 @@ func (k Keeper) GetBet(
 func (k Keeper) RemoveBet(
 	ctx sdk.Context,
 	index string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.BetKeyPrefix))
 	store.Delete(types.BetKey(
 		index,
 	))
+}
+
+// GetBets returns all betting of the given lottery
+func (k Keeper) GetBets(ctx sdk.Context, lottery uint64) (list []types.Bet) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.BetKeyPrefix))
+	iterator := sdk.KVStorePrefixIterator(store, sdk.Uint64ToBigEndian(lottery))
+
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		var val types.Bet
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+		list = append(list, val)
+	}
+
+	return
 }
 
 // GetAllBet returns all bet

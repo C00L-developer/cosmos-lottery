@@ -8,5 +8,6 @@ option go_package = "lottery/x/lottery/types";
 // Params defines the parameters for the module.
 message Params {
   option (gogoproto.goproto_stringer) = false;
-  
+  uint32 BetThresCount = 1;
+  string LotteryFee = 2;
 }

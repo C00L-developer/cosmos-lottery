@@ -37,7 +37,11 @@ export type LotteryMsgUpdateLotteryResponse = object;
 /**
  * Params defines the parameters for the module.
  */
-export type LotteryParams = object;
+export interface LotteryParams {
+  /** @format int64 */
+  BetThresCount?: number;
+  LotteryFee?: string;
+}
 
 export interface LotteryQueryAllBetResponse {
   bet?: LotteryBet[];

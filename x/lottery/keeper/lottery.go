@@ -67,11 +67,20 @@ func (k Keeper) GetOpenLottery(ctx sdk.Context) types.Lottery {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LotteryKeyPrefix))
 	iterator := sdk.KVStoreReversePrefixIterator(store, []byte{})
 	var val types.Lottery
+	var lastLotteryID uint64
 	if iterator.Valid() {
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
-		if val.Winner == "" {
+		if val.Winner == "" || val.Winner == types.ModuleName {
 			return val
+		} else {
+			lastLotteryID = val.Index
 		}
 	}
-	return types.Lottery{}
+	newLottery := types.Lottery{
+		Index:   lastLotteryID + 1,
+		Creator: types.ModuleName,
+	}
+	k.SetLottery(ctx, newLottery)
+
+	return newLottery
 }

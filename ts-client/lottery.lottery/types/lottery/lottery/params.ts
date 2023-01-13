@@ -5,14 +5,22 @@ export const protobufPackage = "lottery.lottery";
 
 /** Params defines the parameters for the module. */
 export interface Params {
+  BetThresCount: number;
+  LotteryFee: string;
 }
 
 function createBaseParams(): Params {
-  return {};
+  return { BetThresCount: 0, LotteryFee: "" };
 }
 
 export const Params = {
-  encode(_: Params, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Params, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.BetThresCount !== 0) {
+      writer.uint32(8).uint32(message.BetThresCount);
+    }
+    if (message.LotteryFee !== "") {
+      writer.uint32(18).string(message.LotteryFee);
+    }
     return writer;
   },
 
@@ -23,6 +31,12 @@ export const Params = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          message.BetThresCount = reader.uint32();
+          break;
+        case 2:
+          message.LotteryFee = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -31,17 +45,24 @@ export const Params = {
     return message;
   },
 
-  fromJSON(_: any): Params {
-    return {};
+  fromJSON(object: any): Params {
+    return {
+      BetThresCount: isSet(object.BetThresCount) ? Number(object.BetThresCount) : 0,
+      LotteryFee: isSet(object.LotteryFee) ? String(object.LotteryFee) : "",
+    };
   },
 
-  toJSON(_: Params): unknown {
+  toJSON(message: Params): unknown {
     const obj: any = {};
+    message.BetThresCount !== undefined && (obj.BetThresCount = Math.round(message.BetThresCount));
+    message.LotteryFee !== undefined && (obj.LotteryFee = message.LotteryFee);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<Params>, I>>(_: I): Params {
+  fromPartial<I extends Exact<DeepPartial<Params>, I>>(object: I): Params {
     const message = createBaseParams();
+    message.BetThresCount = object.BetThresCount ?? 0;
+    message.LotteryFee = object.LotteryFee ?? "";
     return message;
   },
 };
@@ -56,3 +77,7 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
+}

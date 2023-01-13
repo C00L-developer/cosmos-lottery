@@ -14,7 +14,10 @@ func ParamKeyTable() paramtypes.KeyTable {
 
 // NewParams creates a new Params instance
 func NewParams() Params {
-	return Params{}
+	return Params{
+		BetThresCount: 10,
+		LotteryFee:    "5token",
+	}
 }
 
 // DefaultParams returns a default set of parameters
