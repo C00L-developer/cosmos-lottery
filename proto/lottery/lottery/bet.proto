@@ -9,6 +9,4 @@ message Bet {
   string suffix = 3; 
   string suffixHash = 4; 
   string player = 5; 
-  
 }
-

@@ -45052,6 +45052,8 @@ paths:
                     format: int64
                   LotteryFee:
                     type: string
+                  MinBetAmount:
+                    type: string
             description: >-
               QueryParamsResponse is response type for the Query/Params RPC
               method.
@@ -74669,6 +74671,8 @@ definitions:
         format: int64
       LotteryFee:
         type: string
+      MinBetAmount:
+        type: string
     description: Params defines the parameters for the module.
   lottery.lottery.QueryAllBetResponse:
     type: object
@@ -74795,5 +74799,7 @@ definitions:
             type: integer
             format: int64
           LotteryFee:
+            type: string
+          MinBetAmount:
             type: string
     description: QueryParamsResponse is response type for the Query/Params RPC method.

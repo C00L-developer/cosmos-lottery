@@ -10,4 +10,5 @@ message Params {
   option (gogoproto.goproto_stringer) = false;
   uint32 BetThresCount = 1;
   string LotteryFee = 2;
+  string MinBetAmount = 3;
 }

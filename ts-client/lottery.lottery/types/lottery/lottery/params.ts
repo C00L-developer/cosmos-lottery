@@ -7,10 +7,11 @@ export const protobufPackage = "lottery.lottery";
 export interface Params {
   BetThresCount: number;
   LotteryFee: string;
+  MinBetAmount: string;
 }
 
 function createBaseParams(): Params {
-  return { BetThresCount: 0, LotteryFee: "" };
+  return { BetThresCount: 0, LotteryFee: "", MinBetAmount: "" };
 }
 
 export const Params = {
@@ -20,6 +21,9 @@ export const Params = {
     }
     if (message.LotteryFee !== "") {
       writer.uint32(18).string(message.LotteryFee);
+    }
+    if (message.MinBetAmount !== "") {
+      writer.uint32(26).string(message.MinBetAmount);
     }
     return writer;
   },
@@ -37,6 +41,9 @@ export const Params = {
         case 2:
           message.LotteryFee = reader.string();
           break;
+        case 3:
+          message.MinBetAmount = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -49,6 +56,7 @@ export const Params = {
     return {
       BetThresCount: isSet(object.BetThresCount) ? Number(object.BetThresCount) : 0,
       LotteryFee: isSet(object.LotteryFee) ? String(object.LotteryFee) : "",
+      MinBetAmount: isSet(object.MinBetAmount) ? String(object.MinBetAmount) : "",
     };
   },
 
@@ -56,6 +64,7 @@ export const Params = {
     const obj: any = {};
     message.BetThresCount !== undefined && (obj.BetThresCount = Math.round(message.BetThresCount));
     message.LotteryFee !== undefined && (obj.LotteryFee = message.LotteryFee);
+    message.MinBetAmount !== undefined && (obj.MinBetAmount = message.MinBetAmount);
     return obj;
   },
 
@@ -63,6 +72,7 @@ export const Params = {
     const message = createBaseParams();
     message.BetThresCount = object.BetThresCount ?? 0;
     message.LotteryFee = object.LotteryFee ?? "";
+    message.MinBetAmount = object.MinBetAmount ?? "";
     return message;
   },
 };

@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 
 	"lottery/x/lottery/types"
 
@@ -11,7 +12,9 @@ import (
 func (k msgServer) AddBet(goCtx context.Context, msg *types.MsgAddBet) (*types.MsgAddBetResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	lottery := k.GetOpenLottery(ctx)
-
+	if lottery.Winner != "" {
+		return nil, fmt.Errorf("the lottery %d is locked, cannot bet at this moment", lottery.Index)
+	}
 	// create a new bet
 	betID := types.LotteryKey(lottery.Index)
 	betID = append(betID, []byte(msg.GetCreator())...)
@@ -31,6 +34,12 @@ func (k msgServer) AddBet(goCtx context.Context, msg *types.MsgAddBet) (*types.M
 	amount, err := sdk.ParseCoinsNormalized(msg.Amount)
 	if err != nil {
 		return nil, err
+	}
+	params := k.GetParams(ctx)
+	fee, _ := sdk.ParseCoinsNormalized(params.LotteryFee)
+	minBet, _ := sdk.ParseCoinsNormalized(params.MinBetAmount)
+	if !amount.IsAllGTE(fee.Add(minBet...)) {
+		return nil, fmt.Errorf("the amount %v is not enough", amount)
 	}
 	if err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, player, types.ModuleName, amount); err != nil {
 		return nil, err

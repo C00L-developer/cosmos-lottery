@@ -41,6 +41,7 @@ export interface LotteryParams {
   /** @format int64 */
   BetThresCount?: number;
   LotteryFee?: string;
+  MinBetAmount?: string;
 }
 
 export interface LotteryQueryAllBetResponse {

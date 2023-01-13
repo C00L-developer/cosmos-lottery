@@ -14,7 +14,9 @@ import (
 func (k msgServer) RevealBet(goCtx context.Context, msg *types.MsgRevealBet) (*types.MsgRevealBetResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	lottery := k.GetOpenLottery(ctx)
-
+	if lottery.Winner == "" {
+		return nil, fmt.Errorf("the lottery %d is still open, cannot reveal", lottery.Index)
+	}
 	// reveal the existing bet
 	betID := types.LotteryKey(lottery.Index)
 	betID = append(betID, []byte(msg.GetCreator())...)

@@ -17,3 +17,12 @@ client:
 faucet:
   name: bob
   coins: ["5token", "100000stake"]
+genesis:
+  app_state:
+    lottery:
+      params:
+        BetThresCount: 10
+        LotteryFee: "5token"
+        MinBetAmount: "1token"
+build:
+  binary: "lotteryd"

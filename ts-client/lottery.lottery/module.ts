@@ -7,26 +7,14 @@ import { msgTypes } from './registry';
 import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
-import { MsgDeleteLottery } from "./types/lottery/lottery/tx";
-import { MsgCreateLottery } from "./types/lottery/lottery/tx";
 import { MsgUpdateLottery } from "./types/lottery/lottery/tx";
 import { MsgAddBet } from "./types/lottery/lottery/tx";
+import { MsgCreateLottery } from "./types/lottery/lottery/tx";
 import { MsgRevealBet } from "./types/lottery/lottery/tx";
+import { MsgDeleteLottery } from "./types/lottery/lottery/tx";
 
 
-export { MsgDeleteLottery, MsgCreateLottery, MsgUpdateLottery, MsgAddBet, MsgRevealBet };
-
-type sendMsgDeleteLotteryParams = {
-  value: MsgDeleteLottery,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgCreateLotteryParams = {
-  value: MsgCreateLottery,
-  fee?: StdFee,
-  memo?: string
-};
+export { MsgUpdateLottery, MsgAddBet, MsgCreateLottery, MsgRevealBet, MsgDeleteLottery };
 
 type sendMsgUpdateLotteryParams = {
   value: MsgUpdateLottery,
@@ -40,20 +28,24 @@ type sendMsgAddBetParams = {
   memo?: string
 };
 
+type sendMsgCreateLotteryParams = {
+  value: MsgCreateLottery,
+  fee?: StdFee,
+  memo?: string
+};
+
 type sendMsgRevealBetParams = {
   value: MsgRevealBet,
   fee?: StdFee,
   memo?: string
 };
 
-
-type msgDeleteLotteryParams = {
+type sendMsgDeleteLotteryParams = {
   value: MsgDeleteLottery,
+  fee?: StdFee,
+  memo?: string
 };
 
-type msgCreateLotteryParams = {
-  value: MsgCreateLottery,
-};
 
 type msgUpdateLotteryParams = {
   value: MsgUpdateLottery,
@@ -63,8 +55,16 @@ type msgAddBetParams = {
   value: MsgAddBet,
 };
 
+type msgCreateLotteryParams = {
+  value: MsgCreateLottery,
+};
+
 type msgRevealBetParams = {
   value: MsgRevealBet,
+};
+
+type msgDeleteLotteryParams = {
+  value: MsgDeleteLottery,
 };
 
 
@@ -84,34 +84,6 @@ interface TxClientOptions {
 export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "http://localhost:26657", prefix: "cosmos" }) => {
 
   return {
-		
-		async sendMsgDeleteLottery({ value, fee, memo }: sendMsgDeleteLotteryParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgDeleteLottery: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgDeleteLottery({ value: MsgDeleteLottery.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgDeleteLottery: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgCreateLottery({ value, fee, memo }: sendMsgCreateLotteryParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgCreateLottery: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgCreateLottery({ value: MsgCreateLottery.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgCreateLottery: Could not broadcast Tx: '+ e.message)
-			}
-		},
 		
 		async sendMsgUpdateLottery({ value, fee, memo }: sendMsgUpdateLotteryParams): Promise<DeliverTxResponse> {
 			if (!signer) {
@@ -141,6 +113,20 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
+		async sendMsgCreateLottery({ value, fee, memo }: sendMsgCreateLotteryParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgCreateLottery: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgCreateLottery({ value: MsgCreateLottery.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgCreateLottery: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
 		async sendMsgRevealBet({ value, fee, memo }: sendMsgRevealBetParams): Promise<DeliverTxResponse> {
 			if (!signer) {
 					throw new Error('TxClient:sendMsgRevealBet: Unable to sign Tx. Signer is not present.')
@@ -155,22 +141,20 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		
-		msgDeleteLottery({ value }: msgDeleteLotteryParams): EncodeObject {
-			try {
-				return { typeUrl: "/lottery.lottery.MsgDeleteLottery", value: MsgDeleteLottery.fromPartial( value ) }  
+		async sendMsgDeleteLottery({ value, fee, memo }: sendMsgDeleteLotteryParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgDeleteLottery: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgDeleteLottery({ value: MsgDeleteLottery.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
-				throw new Error('TxClient:MsgDeleteLottery: Could not create message: ' + e.message)
+				throw new Error('TxClient:sendMsgDeleteLottery: Could not broadcast Tx: '+ e.message)
 			}
 		},
 		
-		msgCreateLottery({ value }: msgCreateLotteryParams): EncodeObject {
-			try {
-				return { typeUrl: "/lottery.lottery.MsgCreateLottery", value: MsgCreateLottery.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgCreateLottery: Could not create message: ' + e.message)
-			}
-		},
 		
 		msgUpdateLottery({ value }: msgUpdateLotteryParams): EncodeObject {
 			try {
@@ -188,11 +172,27 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
+		msgCreateLottery({ value }: msgCreateLotteryParams): EncodeObject {
+			try {
+				return { typeUrl: "/lottery.lottery.MsgCreateLottery", value: MsgCreateLottery.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgCreateLottery: Could not create message: ' + e.message)
+			}
+		},
+		
 		msgRevealBet({ value }: msgRevealBetParams): EncodeObject {
 			try {
 				return { typeUrl: "/lottery.lottery.MsgRevealBet", value: MsgRevealBet.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgRevealBet: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgDeleteLottery({ value }: msgDeleteLotteryParams): EncodeObject {
+			try {
+				return { typeUrl: "/lottery.lottery.MsgDeleteLottery", value: MsgDeleteLottery.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgDeleteLottery: Could not create message: ' + e.message)
 			}
 		},
 		
