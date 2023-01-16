@@ -9,44 +9,71 @@ ignite chain serve
 
 `serve` command installs dependencies, builds, initializes, and starts your blockchain in development.
 
-### Configure
+### Design
 
-Your blockchain in development can be configured with `config.yml`. To learn more, see the [Ignite CLI docs](https://docs.ignite.com).
+There are mainly two data types:
 
-### Web Frontend
+- Lottery: is a struct to store the lottery information
 
-Ignite CLI has scaffolded a Vue.js-based web app in the `vue` directory. Run the following commands to install dependencies and start the app:
+    ```go
+    type Lottery struct {
+        Index   uint64 `protobuf:"varint,1,opt,name=index,proto3" json:"index,omitempty"`
+        Winner  string `protobuf:"bytes,2,opt,name=winner,proto3" json:"winner,omitempty"`
+        Creator string `protobuf:"bytes,3,opt,name=creator,proto3" json:"creator,omitempty"`
+    }
+    ```
 
+- Bet: is a struct to store the bet lists of the given lottery
+
+    ```go
+    type Bet struct {
+        Index      string `protobuf:"bytes,1,opt,name=index,proto3" json:"index,omitempty"`
+        Amount     string `protobuf:"bytes,2,opt,name=amount,proto3" json:"amount,omitempty"`
+        Suffix     string `protobuf:"bytes,3,opt,name=suffix,proto3" json:"suffix,omitempty"`
+        SuffixHash string `protobuf:"bytes,4,opt,name=suffixHash,proto3" json:"suffixHash,omitempty"`
+        Player     string `protobuf:"bytes,5,opt,name=player,proto3" json:"player,omitempty"`
+    }
+    ```
+
+    `Index` format is like `{lottery index}/{bet owner address}` to specify bets in the given lottery round.
+
+There are mainly two messages (transactions):
+
+- add-bet: is used for adding bet
+
+    ```cmd
+    lotteryd tx lottery add-bet [token] [suffix]
+    ```
+
+    The `suffix` is used to calc the hash for the winner choosing. To hide the real suffix, we only store `SuffixHash` in this stage.
+    If we have more bets than `BetThresCount` in the end_block, we lock the lottery through setting the `Winnder` as the module name (`lottery`).
+
+- reveal-bet: is used to reveal the suffix (assume the lottery is already locked)
+
+    ```cmd
+    lotteryd tx lottery reveal-bet [suffix]
+    ```
+
+    We compare the `suffix` with the `SuffixHash` of the bet storage for the verify purpose and determine the winner using suffixes of all bets.
+    Through this way, we can protect the block proposer's cheats, because there is no way to reveal suffix which is used to determine the winner before the lottery lock. After the lock, there is no way to update the suffix.
+
+    We have another option of using `RVF`, it is more complicated.
+
+### Demo
+
+The `config.yml` file is set with the initial state. We can init and run the chain using the following commands.
+
+```cmd
+ignite chain serve --reset-once
 ```
-cd vue
-npm install
-npm run serve
+
+Open the new shell, and execute the following command to run the demo script.
+
+```cmd
+go run ./script/demo
 ```
 
-The frontend app is built using the `@starport/vue` and `@starport/vuex` packages. For details, see the [monorepo for Ignite front-end development](https://github.com/ignite/web).
+### Bonus Strategy
 
-## Release
-To release a new version of your blockchain, create and push a new tag with `v` prefix. A new draft release with the configured targets will be created.
-
-```
-git tag v0.1
-git push origin v0.1
-```
-
-After a draft release is created, make your final changes from the release page and publish it.
-
-### Install
-To install the latest version of your blockchain node's binary, execute the following command on your machine:
-
-```
-curl https://get.ignite.com/username/lottery@latest! | sudo bash
-```
-`username/lottery` should match the `username` and `repo_name` of the Github repository to which the source code was pushed. Learn more about [the install process](https://github.com/allinbits/starport-installer).
-
-## Learn more
-
-- [Ignite CLI](https://ignite.com/cli)
-- [Tutorials](https://docs.ignite.com/guide)
-- [Ignite CLI docs](https://docs.ignite.com)
-- [Cosmos SDK docs](https://docs.cosmos.network)
-- [Developer Chat](https://discord.gg/ignite)
+We can calculate the expected amount of every bet through Monte Carlo Simulation. The key point is to keep as lowest bet amount but not last.
+The formula will be complicated, the best way is to calculate this expected value through Monte Carlo methods.

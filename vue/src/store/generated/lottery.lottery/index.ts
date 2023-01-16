@@ -41,6 +41,7 @@ const getDefaultState = () => {
 				BetAll: {},
 				Lottery: {},
 				LotteryAll: {},
+				CurrentLottery: {},
 				
 				_Structure: {
 						Bet: getStructure(Bet.fromPartial({})),
@@ -103,6 +104,12 @@ export default {
 						(<any> params).query=null
 					}
 			return state.LotteryAll[JSON.stringify(params)] ?? {}
+		},
+				getCurrentLottery: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.CurrentLottery[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -256,6 +263,28 @@ export default {
 		},
 		
 		
+		
+		
+		 		
+		
+		
+		async QueryCurrentLottery({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.LotteryLottery.query.queryCurrentLottery()).data
+				
+					
+				commit('QUERY', { query: 'CurrentLottery', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryCurrentLottery', payload: { options: { all }, params: {...key},query }})
+				return getters['getCurrentLottery']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryCurrentLottery API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
 		async sendMsgDeleteLottery({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
@@ -282,19 +311,6 @@ export default {
 				}
 			}
 		},
-		async sendMsgRevealBet({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.LotteryLottery.tx.sendMsgRevealBet({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgRevealBet:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgRevealBet:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
 		async sendMsgCreateLottery({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
@@ -318,6 +334,19 @@ export default {
 					throw new Error('TxClient:MsgUpdateLottery:Init Could not initialize signing client. Wallet is required.')
 				}else{
 					throw new Error('TxClient:MsgUpdateLottery:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgRevealBet({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.LotteryLottery.tx.sendMsgRevealBet({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgRevealBet:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgRevealBet:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -348,19 +377,6 @@ export default {
 				}
 			}
 		},
-		async MsgRevealBet({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.LotteryLottery.tx.msgRevealBet({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgRevealBet:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgRevealBet:Create Could not create message: ' + e.message)
-				}
-			}
-		},
 		async MsgCreateLottery({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
@@ -384,6 +400,19 @@ export default {
 					throw new Error('TxClient:MsgUpdateLottery:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgUpdateLottery:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgRevealBet({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.LotteryLottery.tx.msgRevealBet({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgRevealBet:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgRevealBet:Create Could not create message: ' + e.message)
 				}
 			}
 		},

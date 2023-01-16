@@ -3,12 +3,13 @@ package keeper
 import (
 	"context"
 
+	"lottery/x/lottery/types"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"lottery/x/lottery/types"
 )
 
 func (k Keeper) LotteryAll(c context.Context, req *types.QueryAllLotteryRequest) (*types.QueryAllLotteryResponse, error) {
@@ -31,7 +32,6 @@ func (k Keeper) LotteryAll(c context.Context, req *types.QueryAllLotteryRequest)
 		lotterys = append(lotterys, lottery)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -54,4 +54,15 @@ func (k Keeper) Lottery(c context.Context, req *types.QueryGetLotteryRequest) (*
 	}
 
 	return &types.QueryGetLotteryResponse{Lottery: val}, nil
+}
+
+func (k Keeper) CurrentLottery(c context.Context, req *types.QueryCurrentLotteryRequest) (*types.QueryCurrentLotteryResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+	ctx := sdk.UnwrapSDKContext(c)
+
+	val := k.GetOpenLottery(ctx)
+
+	return &types.QueryCurrentLotteryResponse{Lottery: val}, nil
 }

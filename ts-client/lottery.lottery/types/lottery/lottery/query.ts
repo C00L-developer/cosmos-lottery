@@ -43,6 +43,13 @@ export interface QueryGetLotteryResponse {
   lottery: Lottery | undefined;
 }
 
+export interface QueryCurrentLotteryRequest {
+}
+
+export interface QueryCurrentLotteryResponse {
+  lottery: Lottery | undefined;
+}
+
 export interface QueryAllLotteryRequest {
   pagination: PageRequest | undefined;
 }
@@ -445,6 +452,94 @@ export const QueryGetLotteryResponse = {
   },
 };
 
+function createBaseQueryCurrentLotteryRequest(): QueryCurrentLotteryRequest {
+  return {};
+}
+
+export const QueryCurrentLotteryRequest = {
+  encode(_: QueryCurrentLotteryRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryCurrentLotteryRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryCurrentLotteryRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): QueryCurrentLotteryRequest {
+    return {};
+  },
+
+  toJSON(_: QueryCurrentLotteryRequest): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryCurrentLotteryRequest>, I>>(_: I): QueryCurrentLotteryRequest {
+    const message = createBaseQueryCurrentLotteryRequest();
+    return message;
+  },
+};
+
+function createBaseQueryCurrentLotteryResponse(): QueryCurrentLotteryResponse {
+  return { lottery: undefined };
+}
+
+export const QueryCurrentLotteryResponse = {
+  encode(message: QueryCurrentLotteryResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.lottery !== undefined) {
+      Lottery.encode(message.lottery, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryCurrentLotteryResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryCurrentLotteryResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.lottery = Lottery.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryCurrentLotteryResponse {
+    return { lottery: isSet(object.lottery) ? Lottery.fromJSON(object.lottery) : undefined };
+  },
+
+  toJSON(message: QueryCurrentLotteryResponse): unknown {
+    const obj: any = {};
+    message.lottery !== undefined && (obj.lottery = message.lottery ? Lottery.toJSON(message.lottery) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryCurrentLotteryResponse>, I>>(object: I): QueryCurrentLotteryResponse {
+    const message = createBaseQueryCurrentLotteryResponse();
+    message.lottery = (object.lottery !== undefined && object.lottery !== null)
+      ? Lottery.fromPartial(object.lottery)
+      : undefined;
+    return message;
+  },
+};
+
 function createBaseQueryAllLotteryRequest(): QueryAllLotteryRequest {
   return { pagination: undefined };
 }
@@ -572,6 +667,8 @@ export interface Query {
   Lottery(request: QueryGetLotteryRequest): Promise<QueryGetLotteryResponse>;
   /** Queries a list of Lottery items. */
   LotteryAll(request: QueryAllLotteryRequest): Promise<QueryAllLotteryResponse>;
+  /** Queries a current Lottery. */
+  CurrentLottery(request: QueryCurrentLotteryRequest): Promise<QueryCurrentLotteryResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -583,6 +680,7 @@ export class QueryClientImpl implements Query {
     this.BetAll = this.BetAll.bind(this);
     this.Lottery = this.Lottery.bind(this);
     this.LotteryAll = this.LotteryAll.bind(this);
+    this.CurrentLottery = this.CurrentLottery.bind(this);
   }
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
@@ -612,6 +710,12 @@ export class QueryClientImpl implements Query {
     const data = QueryAllLotteryRequest.encode(request).finish();
     const promise = this.rpc.request("lottery.lottery.Query", "LotteryAll", data);
     return promise.then((data) => QueryAllLotteryResponse.decode(new _m0.Reader(data)));
+  }
+
+  CurrentLottery(request: QueryCurrentLotteryRequest): Promise<QueryCurrentLotteryResponse> {
+    const data = QueryCurrentLotteryRequest.encode(request).finish();
+    const promise = this.rpc.request("lottery.lottery.Query", "CurrentLottery", data);
+    return promise.then((data) => QueryCurrentLotteryResponse.decode(new _m0.Reader(data)));
   }
 }
 

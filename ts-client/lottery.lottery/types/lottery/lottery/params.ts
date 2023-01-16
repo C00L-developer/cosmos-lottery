@@ -8,10 +8,11 @@ export interface Params {
   BetThresCount: number;
   LotteryFee: string;
   MinBetAmount: string;
+  MaxBetAmount: string;
 }
 
 function createBaseParams(): Params {
-  return { BetThresCount: 0, LotteryFee: "", MinBetAmount: "" };
+  return { BetThresCount: 0, LotteryFee: "", MinBetAmount: "", MaxBetAmount: "" };
 }
 
 export const Params = {
@@ -24,6 +25,9 @@ export const Params = {
     }
     if (message.MinBetAmount !== "") {
       writer.uint32(26).string(message.MinBetAmount);
+    }
+    if (message.MaxBetAmount !== "") {
+      writer.uint32(34).string(message.MaxBetAmount);
     }
     return writer;
   },
@@ -44,6 +48,9 @@ export const Params = {
         case 3:
           message.MinBetAmount = reader.string();
           break;
+        case 4:
+          message.MaxBetAmount = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -57,6 +64,7 @@ export const Params = {
       BetThresCount: isSet(object.BetThresCount) ? Number(object.BetThresCount) : 0,
       LotteryFee: isSet(object.LotteryFee) ? String(object.LotteryFee) : "",
       MinBetAmount: isSet(object.MinBetAmount) ? String(object.MinBetAmount) : "",
+      MaxBetAmount: isSet(object.MaxBetAmount) ? String(object.MaxBetAmount) : "",
     };
   },
 
@@ -65,6 +73,7 @@ export const Params = {
     message.BetThresCount !== undefined && (obj.BetThresCount = Math.round(message.BetThresCount));
     message.LotteryFee !== undefined && (obj.LotteryFee = message.LotteryFee);
     message.MinBetAmount !== undefined && (obj.MinBetAmount = message.MinBetAmount);
+    message.MaxBetAmount !== undefined && (obj.MaxBetAmount = message.MaxBetAmount);
     return obj;
   },
 
@@ -73,6 +82,7 @@ export const Params = {
     message.BetThresCount = object.BetThresCount ?? 0;
     message.LotteryFee = object.LotteryFee ?? "";
     message.MinBetAmount = object.MinBetAmount ?? "";
+    message.MaxBetAmount = object.MaxBetAmount ?? "";
     return message;
   },
 };

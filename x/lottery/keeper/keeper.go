@@ -86,7 +86,7 @@ func (k Keeper) Drawlots(ctx sdk.Context) {
 				lo = i
 			}
 		}
-		suffixHash := sha256.Sum256([]byte(suffix))
+		suffixHash := sha256.Sum256([]byte(fmt.Sprintf("%s%d", suffix, lottery.Index)))
 		winner := int(binary.BigEndian.Uint32(suffixHash[:4]) % uint32(len(bets)))
 		lottery.Winner = bets[winner].Player
 
@@ -96,7 +96,7 @@ func (k Keeper) Drawlots(ctx sdk.Context) {
 				if err != nil {
 					panic(err)
 				}
-				rewards.Sub(fee.MulInt(math.NewInt(int64(len(bets))))...)
+				rewards = rewards.Sub(fee.MulInt(math.NewInt(int64(len(bets))))...)
 			}
 			player, _ := sdk.AccAddressFromBech32(lottery.Winner)
 			k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, player, rewards)

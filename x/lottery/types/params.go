@@ -34,6 +34,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 		paramtypes.NewParamSetPair([]byte("BetThresCount"), &p.BetThresCount, validateBetThresCount),
 		paramtypes.NewParamSetPair([]byte("LotteryFee"), &p.LotteryFee, validateCoins),
 		paramtypes.NewParamSetPair([]byte("MinBetAmount"), &p.MinBetAmount, validateCoins),
+		paramtypes.NewParamSetPair([]byte("MaxBetAmount"), &p.MaxBetAmount, validateCoins),
 	}
 }
 

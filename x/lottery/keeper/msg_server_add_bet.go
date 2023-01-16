@@ -35,12 +35,18 @@ func (k msgServer) AddBet(goCtx context.Context, msg *types.MsgAddBet) (*types.M
 	if err != nil {
 		return nil, err
 	}
+	// check if the bet amount is valid
 	params := k.GetParams(ctx)
 	fee, _ := sdk.ParseCoinsNormalized(params.LotteryFee)
 	minBet, _ := sdk.ParseCoinsNormalized(params.MinBetAmount)
+	maxBet, _ := sdk.ParseCoinsNormalized(params.MaxBetAmount)
 	if !amount.IsAllGTE(fee.Add(minBet...)) {
-		return nil, fmt.Errorf("the amount %v is not enough", amount)
+		return nil, fmt.Errorf("the bet amount %v is not enough", amount)
 	}
+	if amount.IsAllGT(fee.Add(maxBet...)) {
+		return nil, fmt.Errorf("the bet amount %v is too large", amount)
+	}
+	// send coins to the lottery pool
 	if err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, player, types.ModuleName, amount); err != nil {
 		return nil, err
 	}

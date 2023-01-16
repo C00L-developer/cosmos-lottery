@@ -37,6 +37,11 @@ service Query {
 		option (google.api.http).get = "/lottery/lottery/lottery";
 	}
 
+	// Queries a current Lottery.
+	rpc CurrentLottery(QueryCurrentLotteryRequest) returns (QueryCurrentLotteryResponse) {
+		option (google.api.http).get = "/lottery/lottery/lottery/current";
+	}
+
 // this line is used by starport scaffolding # 2
 }
 
@@ -74,6 +79,13 @@ message QueryGetLotteryRequest {
 
 message QueryGetLotteryResponse {
 	Lottery lottery = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryCurrentLotteryRequest {
+}
+
+message QueryCurrentLotteryResponse {
+  Lottery lottery = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryAllLotteryRequest {

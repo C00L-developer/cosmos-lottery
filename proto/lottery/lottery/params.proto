@@ -11,4 +11,5 @@ message Params {
   uint32 BetThresCount = 1;
   string LotteryFee = 2;
   string MinBetAmount = 3;
+  string MaxBetAmount = 4;
 }

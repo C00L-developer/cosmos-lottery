@@ -42,6 +42,7 @@ export interface LotteryParams {
   BetThresCount?: number;
   LotteryFee?: string;
   MinBetAmount?: string;
+  MaxBetAmount?: string;
 }
 
 export interface LotteryQueryAllBetResponse {
@@ -72,6 +73,10 @@ export interface LotteryQueryAllLotteryResponse {
    *  }
    */
   pagination?: V1Beta1PageResponse;
+}
+
+export interface LotteryQueryCurrentLotteryResponse {
+  lottery?: LotteryLottery;
 }
 
 export interface LotteryQueryGetBetResponse {
@@ -362,6 +367,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       path: `/lottery/lottery/lottery`,
       method: "GET",
       query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryCurrentLottery
+   * @summary Queries a current Lottery.
+   * @request GET:/lottery/lottery/lottery/current
+   */
+  queryCurrentLottery = (params: RequestParams = {}) =>
+    this.request<LotteryQueryCurrentLotteryResponse, RpcStatus>({
+      path: `/lottery/lottery/lottery/current`,
+      method: "GET",
       format: "json",
       ...params,
     });
